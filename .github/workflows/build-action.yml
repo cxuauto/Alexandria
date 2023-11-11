@@ -41,11 +41,18 @@ jobs:
               src-tauri/target/release/**/*.appimage
               !src-tauri/target/release/deps
               !src-tauri/target/release/build
+        - name: prepare release upload
+          run: |
+            mkdir -p upload-to-release
+            mv src-tauri/target/release/**/*.exe upload-to-release/
+            mv src-tauri/target/release/**/*.msi upload-to-release/
+            mv src-tauri/target/release/**/*.deb upload-to-release/
+            mv src-tauri/target/release/**/*.appimage upload-to-release/
         - name: Upload binaries to release
           uses: svenstaro/upload-release-action@v2
           with:
             repo_token: ${{ secrets.GITHUB_TOKEN }}
-            file: src-tauri/target/release/**/*.*
+            file: upload-to-release/*
             file_glob: true
             tag: "nightly"
             overwrite: true
